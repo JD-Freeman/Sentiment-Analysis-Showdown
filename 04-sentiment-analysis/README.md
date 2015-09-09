@@ -1,3 +1,8 @@
+Givin at the Data Science Indianapolis meet-up on 9 Sept 2015
+_____
+
+
+
 # Sentiment Analysis  
 
 In this tutorial we will introduce one of those applications of machine learning that leaves you thinking about how to put it into some product or service and build a company around it (and surely some of you with the right set of genes will). [Sentiment analysis](https://en.wikipedia.org/wiki/Sentiment_analysis) refers to the use of *natural language processing*, *text analysis* and *statistical learning* to identify and extract subjective information in source materials.  
