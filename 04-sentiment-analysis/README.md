@@ -1,4 +1,4 @@
-Givin at the Data Science Indianapolis meet-up on 9 Sept 2015
+Given at the Data Science Indianapolis meet-up on 9 Sept 2015
 _____
 
 
