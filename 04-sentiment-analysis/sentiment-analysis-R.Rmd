@@ -1,7 +1,7 @@
 ---
 title: "Sentiment Analysis"
-author: "Jose A. Dianes"
-date: "3 August 2015"
+author: "Data Science Indy Meetup"
+date: "9 Sept 2015"
 output:
   html_document:
     keep_md: yes
@@ -14,23 +14,22 @@ In R, you use `read.csv` to read CSV files into `data.frame` variables. Although
 
 
 ```{r}
+setwd("~/Sentiment-Analysis-Showdown/04-sentiment-analysis")
 library(RCurl)
 
-test_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
-train_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
+#test_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
+#train_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
 
-test_data_file <- getURL(test_data_url)
-train_data_file <- getURL(train_data_url)
+#test_data_file <- getURL(test_data_url)
+#train_data_file <- getURL(train_data_url)
 
-train_data_df <- read.csv(
-    text = train_data_file, 
+train_data_df <- read.csv("train_data.csv", 
     sep='\t', 
     header=FALSE, 
     quote = "",
     stringsAsFactor=F,
     col.names=c("Sentiment", "Text"))
-test_data_df <- read.csv(
-    text = test_data_file, 
+test_data_df <- read.csv("test_data.csv", 
     sep='\t', 
     header=FALSE, 
     quote = "",
@@ -52,13 +51,13 @@ We can also get a glimpse at how tags ar distributed. In R we can use `table`.
 table(train_data_df$Sentiment)
 ```
 
-That is, we have data more or less evenly distributed, with 3091 negatively tagged sentences, and 3995 positively tagged sentences. How long on average are our sentences in words?    
+That is, we have data more or less evenly distributed, with 12740 negatively tagged sentences, and 17719 positively tagged sentences. How long on average are our sentences in words?    
 
 ```{r}
 mean(sapply(sapply(train_data_df$Text, strsplit, " "), length))
 ```
 
-About 10.8 words in length.  
+About 10 words in length.  
 
 ## Preparing a corpus  
 
@@ -96,7 +95,7 @@ First we put everything in lowercase. The second transformation is needed in ord
 corpus[1]$content
 ```
 
-In our way to find document input features for our classifier, we want to put this corpus in the shame of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the freqency in a document for a given term.  
+In our way to find document input features for our classifier, we want to put this corpus in the shape of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the freqency in a document for a given term.  
 
 This is how we do it in R.  
 
@@ -112,7 +111,7 @@ sparse <- removeSparseTerms(dtm, 0.99)
 sparse
 ```
 
-We end up with just 85 terms. The close that value is to 1, the more terms we will have in our `sparse` object, since the number of documents we need a term to be in is smaller.  
+We end up with just 84 terms. The closer that value is to 1, the more terms we will have in our `sparse` object, since the number of documents we need a term to be in is smaller.  
 
 Now we want to convert this matrix into a data frame that we can use to train a classifier in the next section.  
 
@@ -177,7 +176,7 @@ table(eval_test_data_df$Sentiment, log_pred>.5)
 The cases where our model performed properly are given by the diagonal.  
 
 ```{r}
-(453 + 590) / nrow(eval_test_data_df)
+(1880 + 2644) / nrow(eval_test_data_df)
 ```
 
 This is a very good accuracy. It seems that our bag of words approach works nicely with this particular problem.  
